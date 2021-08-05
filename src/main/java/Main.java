@@ -33,7 +33,7 @@ public class Main {
                 case "1-", "удалить" -> System.out.println(deleteContact() ? "Контакт удалён" : "Удаление отменено");
                 case "2", "звонок" -> imitateANewMissedCall();
                 case "3", "список" -> showMissedCallsList();
-                case "4", "очистить" -> callList.clear();
+                case "4", "очистить" -> clear();
             }
         }
         System.out.println("Завершение работы с телефоном.");
@@ -128,6 +128,15 @@ public class Main {
         return true;
     }
 
+    static void clear() {
+        System.out.println("Очистить список звонков? (+ для подтверждения)");
+        if (input.nextLine().equals("+")) {
+            callList.clear();
+            System.out.println("Список пропущенных звонков опустошён.");
+        } else {
+            System.out.println("Очистка отменена");
+        }
+    }
 
     // служебные функции:
 
