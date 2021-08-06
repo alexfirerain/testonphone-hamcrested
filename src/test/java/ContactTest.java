@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,13 +15,14 @@ class ContactTest {
     }
 
     @Test
-    void toString_test() {
-        assertEquals("Имя Фамилия: +7-000 (Друзья)", contact.toString());
+    public void toString_correctly_returns() {
+        assertThat(contact, hasToString("Имя Фамилия: +7-000 (Друзья)"));
     }
 
     @Test
     void shortString_test() {
-        assertEquals("Имя Фамилия", contact.getShortString());
+        String stringReturned = contact.getShortString();
+        assertThat(stringReturned, equalTo("Имя Фамилия"));
     }
 
     @Test

@@ -1,10 +1,16 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DemoCallListTest {
     private final static String EXAMPLE_NUMBER = "+7-000";
+    final ContactBase CB = ContactBase.getBaseExample();
+
 
     CallList demoCallList;
 
@@ -14,16 +20,17 @@ class DemoCallListTest {
     }
 
     @Test
-    void filled_at_start() {
-        assertEquals(CallList.CALLS_EXAMPLE.length,
-                demoCallList.giveMissedCalls(ContactBase.getBaseExample()).length);
+    void rightly_filled_at_start() {
+        String[] calls = demoCallList.giveMissedCalls(CB);
+        assertThat(calls, arrayWithSize(CallList.CALLS_EXAMPLE.length));
     }
 
     @Test
     void right_demoNumbers_sequence() {
         String[] stringsOutput = demoCallList.giveMissedCalls(new ContactBase());
-        for (int i = 0; i < CallList.CALLS_EXAMPLE.length; i++)
-            assertTrue(stringsOutput[i].endsWith(CallList.CALLS_EXAMPLE[i]));
+        int bound = CallList.CALLS_EXAMPLE.length;
+        IntStream.range(0, bound).
+                forEach(i -> assertThat(stringsOutput[i].endsWith(CallList.CALLS_EXAMPLE[i]), is(true)));
     }
 
     @Test
@@ -48,8 +55,9 @@ class DemoCallListTest {
 
     @Test
     void really_clears() {
+        assertThat(demoCallList.missedCallsCount(), not(equalTo(0)));
         demoCallList.clear();
-        assertEquals(0, demoCallList.missedCallsCount());
+        assertThat(demoCallList.missedCallsCount(), equalTo(0));
     }
 
     @Test

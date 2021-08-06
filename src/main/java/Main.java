@@ -146,7 +146,11 @@ public class Main {
     }
     protected static Contact.Group chooseGroup() {
         while (true) {
-            System.out.println("Выберите группу контакта:\n1 = Работа\n2 = Друзья\n3 = Семья");
+            System.out.println("""
+                    Выберите группу контакта:
+                    1 = Работа
+                    2 = Друзья
+                    3 = Семья""");
             switch (input.nextLine()) {
                 case "1" : return Contact.Group.WORK;
                 case "2" : return Contact.Group.FRIENDS;

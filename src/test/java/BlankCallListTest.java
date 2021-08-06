@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BlankCallListTest {
@@ -22,8 +24,7 @@ class BlankCallListTest {
 
     @Test
     void empty_list_at_start() {
-        assertEquals(0,
-                callList.giveMissedCalls(ContactBase.getBaseExample()).length);
+        assertThat(callList.giveMissedCalls(ContactBase.getBaseExample()), is(emptyArray()));
     }
 
     @Test

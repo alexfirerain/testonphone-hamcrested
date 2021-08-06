@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,8 +34,8 @@ class BlankContactBaseTest {
 
     @Test
     void bypasses_number() {
-        assertEquals(EXAMPLE_NUMBER,
-                cb.tryToGetNameFor(EXAMPLE_NUMBER));
+        assertThat(EXAMPLE_NUMBER,
+                equalTo(cb.tryToGetNameFor(EXAMPLE_NUMBER)));
     }
 
     @Test

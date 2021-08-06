@@ -3,7 +3,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class ContactBase {
-    private final HashMap<String, Contact> contacts;
+    protected final HashMap<String, Contact> contacts;
 
     public ContactBase() {
         contacts = new HashMap<>();
@@ -54,6 +54,10 @@ public class ContactBase {
                 return next;
         }
         return null;
+    }
+
+    public int getContactsCount() {
+        return contacts.size();
     }
 
     // демо-пример списка контактов
