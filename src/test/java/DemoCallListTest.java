@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -29,28 +30,28 @@ class DemoCallListTest {
     void right_demoNumbers_sequence() {
         String[] stringsOutput = demoCallList.giveMissedCalls(new ContactBase());
         int bound = CallList.CALLS_EXAMPLE.length;
-        IntStream.range(0, bound).
-                forEach(i -> assertThat(stringsOutput[i].endsWith(CallList.CALLS_EXAMPLE[i]), is(true)));
+        IntStream.range(0, bound)
+                .forEach(i ->
+                        assertThat(stringsOutput[i], endsWith(CallList.CALLS_EXAMPLE[i]))
+                );
     }
 
     @Test
     void generating_adds_aCall() {
-        int initialLoading = demoCallList.missedCallsCount();
+        int initialCount = demoCallList.missedCallsCount();
         demoCallList.generateAMissedCall(EXAMPLE_NUMBER);
-        assertEquals(initialLoading + 1,
-                demoCallList.missedCallsCount());
+        int expectedCount = initialCount + 1;
+        assertThat(demoCallList.missedCallsCount(), equalTo(expectedCount));
     }
 
     @Test
     void generating_adds_aCall_atTail() {
-        int initialLoading = demoCallList.missedCallsCount();
+        int initialCount = demoCallList.missedCallsCount();
         demoCallList.generateAMissedCall(EXAMPLE_NUMBER);
-        assertAll("generating_adds_aCall_atTail",
-                () -> assertEquals(initialLoading + 1,
-                        demoCallList.missedCallsCount()),
-                () -> assertEquals(EXAMPLE_NUMBER,
-                        demoCallList.missedCalls.get(demoCallList.missedCalls.lastKey()))
-        );
+        assertThat(demoCallList.missedCallsCount(), equalTo(initialCount + 1));
+
+        Date lastCallTime = demoCallList.missedCalls.lastKey();
+        assertThat(demoCallList.missedCalls.get(lastCallTime), is(EXAMPLE_NUMBER));
     }
 
     @Test
@@ -64,7 +65,7 @@ class DemoCallListTest {
     void clearing_doesNotAffect_time() {
         long timeBefore = demoCallList.virtualInternalTime.getTime();
         demoCallList.clear();
-        assertEquals(timeBefore, demoCallList.virtualInternalTime.getTime());
+        assertThat(demoCallList.virtualInternalTime.getTime(), equalTo(timeBefore));
     }
 
     @Test
@@ -72,14 +73,14 @@ class DemoCallListTest {
         long timeBefore = demoCallList.virtualInternalTime.getTime();
         demoCallList.promoteVirtualTime(1000L);
         long timeAfter = demoCallList.virtualInternalTime.getTime();
-        assertEquals(timeBefore + 1000L, timeAfter);
+        assertThat(timeAfter, equalTo(timeBefore + 1000L));
     }
 
     @Test
     void newDemoSequence_doubles_callList() {
         demoCallList.generateDemoMissedCallsSequence();
-        assertEquals(CallList.CALLS_EXAMPLE.length * 2,
-                demoCallList.missedCallsCount());
+        assertThat(demoCallList.missedCallsCount(),
+                equalTo(CallList.CALLS_EXAMPLE.length * 2));
     }
 
     @Test

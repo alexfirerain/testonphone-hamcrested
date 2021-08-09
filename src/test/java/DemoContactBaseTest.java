@@ -1,7 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 class DemoContactBaseTest {
     private final Contact A_CONTACT_FROM_BASE = new Contact("Пахом", "Пахомыч", "+7931-7422816", Contact.Group.WORK);
@@ -19,63 +20,67 @@ class DemoContactBaseTest {
 
     @Test
     void resolves_name_ifPresent() {
-        assertEquals(EXAMPLE_SHORT_NAME,
-                cb.tryToGetNameFor(EXAMPLE_NUMBER));
+        assertThat(cb.tryToGetNameFor(EXAMPLE_NUMBER),
+                equalTo(EXAMPLE_SHORT_NAME));
     }
 
     @Test
     void bypasses_number_ifAbsent() {
-        assertEquals(NUMBER_ABSENT_FROM_BASE,
-                cb.tryToGetNameFor(NUMBER_ABSENT_FROM_BASE));
+        assertThat(cb.tryToGetNameFor(NUMBER_ABSENT_FROM_BASE),
+                equalTo(NUMBER_ABSENT_FROM_BASE));
     }
     @Test
     void shows_ifContents() {
-        assertTrue(cb.containsNumber(EXAMPLE_NUMBER));
+        assertThat(cb.containsNumber(EXAMPLE_NUMBER), is(true));
     }
 
     @Test
     void shows_ifDoesNotContent() {
-        assertFalse(cb.containsNumber(NUMBER_ABSENT_FROM_BASE));
+        assertThat(cb.containsNumber(NUMBER_ABSENT_FROM_BASE), is(false));
     }
 
     @Test
     void contactInfo_gets_ByNumber() {
-        assertEquals(A_CONTACT_FROM_BASE.toString(),
-                cb.getContactInfoByNumber(EXAMPLE_NUMBER));
+        assertThat(cb.getContactInfoByNumber(EXAMPLE_NUMBER),
+                equalTo(A_CONTACT_FROM_BASE.toString()));
     }
 
     @Test
     void warning_ifNoEntity_toGetInfoOf() {
-        assertEquals("Контакт с таким номером не найден",
-                cb.getContactInfoByNumber(NUMBER_ABSENT_FROM_BASE));
+        assertThat(cb.getContactInfoByNumber(NUMBER_ABSENT_FROM_BASE),
+                is("Контакт с таким номером не найден"));
     }
     @Test
     void contact_gets_byNumber() {
-        assertEquals(A_CONTACT_FROM_BASE,
-                cb.getContactByNumber(EXAMPLE_NUMBER));
+        assertThat(cb.getContactByNumber(EXAMPLE_NUMBER), is(A_CONTACT_FROM_BASE));
     }
 
     @Test
     void contact_gets_byNameSurname() {
-        assertEquals(A_CONTACT_FROM_BASE,
-                cb.getContactByNameSurname(A_CONTACT_FROM_BASE.getName(), A_CONTACT_FROM_BASE.getSurname()));
+        String name = A_CONTACT_FROM_BASE.getName(),
+                surname = A_CONTACT_FROM_BASE.getSurname();
+        assertThat(cb.getContactByNameSurname(name, surname), is(A_CONTACT_FROM_BASE));
     }
     @Test
     void contact_adds() {
         Contact newContact = new Contact("Другой", "Знакомый", "+7-000", Contact.Group.FRIENDS);
         cb.addContact(newContact);
-        assertTrue(cb.containsNumber("+7-000"));
+        assertThat(cb.contacts, hasValue(newContact));
+        assertThat(cb.containsNumber("+7-000"), is(true));
     }
 
     @Test
     void contact_removes_byNumber() {
         cb.removeContact(A_CONTACT_FROM_BASE.getNumber());
-        assertFalse(cb.containsNumber(EXAMPLE_NUMBER));
+        assertThat(cb.contacts, not(hasValue(A_CONTACT_FROM_BASE)));
     }
     @Test
     void contact_removes_byNS() {
-        cb.removeContact(EXAMPLE_NUMBER);
-        assertFalse(cb.containsNumber(EXAMPLE_NUMBER));
+        Contact toRemove = A_CONTACT_FROM_BASE;
+        String name = toRemove.getName(),
+                surname = toRemove.getSurname();
+        cb.removeContact(name, surname);
+        assertThat(cb.contacts, not(hasValue(toRemove)));
     }
 
 

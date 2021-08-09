@@ -22,13 +22,13 @@ class ContactTest {
     @Test
     void shortString_test() {
         String stringReturned = contact.getShortString();
-        assertThat(stringReturned, equalTo("Имя Фамилия"));
+        assertThat(stringReturned, is("Имя Фамилия"));
     }
 
     @Test
     void recreation_by_newNumber() {
         Contact newContact = new Contact("+7-001", contact);
-        assertEquals("Имя Фамилия: +7-001 (Друзья)", newContact.toString());
+        assertThat(newContact, hasToString("Имя Фамилия: +7-001 (Друзья)"));
     }
 
 }
